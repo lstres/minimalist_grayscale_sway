@@ -1,0 +1,132 @@
+@import "colors.css";
+
+window#waybar {
+    background-color: transparent;
+}
+
+#workspaces {
+  background-color: @surface;
+  color: @on_surface;
+  padding: 1px 4px;
+  margin-left: 4px;
+  border-radius: 25px;
+}
+
+#workspaces button {
+    font-family: Jetbrains Nerd Font, monospace; 
+    font-size: 10px;
+    padding: 0 0.5em;
+    margin: 4px 2px;
+    background-color: @tertiary_container;
+    color: @on_tertiary_container;
+    border: none;
+    border-radius: 15px;
+    transition: all 0.3s linear;
+    min-height: 0;
+}
+
+#workspaces button.active, 
+#workspaces button.focused {
+    background-color: @primary;
+    color: @on_primary;
+}
+
+#workspaces button:hover {
+    background-color: @inverse_surface;
+    color: @inverse_on_surface;
+    transition: all 0.3s linear;
+}
+
+#custom-power {
+  font-family: JetbrainsMono Nerd Font;
+  font-size: 14px;
+  background-color: @primary_container;
+  color: @on_primary_container;
+  border-radius: 25px;
+  padding: 0 5px 0 10px;
+  margin-left: 4px;
+  min-height: 0;
+}
+
+#window {
+  font-family: JetbrainsMono Nerd Font;
+  font-size: 12px;
+  background-color: @primary_container;
+  color: @on_primary_container;
+  border-radius: 25px;
+  padding: 0 10px;
+  margin-left: 4px;
+  min-height: 0;
+}
+
+#clock {
+    font-family: JetbrainsMono Nerd Font, monospace;
+    font-size: 14px;
+    background-color: @tertiary_container;
+    color: @on_tertiary_container;
+    border-radius: 25px;
+    padding: 0 10px;
+    /* margin-left: 4px; */
+    min-height: 0;
+}
+
+#cpu, #memory {
+    font-family: JetbrainsMono Nerd Font, monospace;
+    font-size: 12px;
+    background-color: @primary_container;
+    color: @on_primary_container;
+    border-radius: 25px;
+    padding: 0 10px;
+    margin-right: 4px;
+    min-height: 0;
+}
+
+#tray {
+  font-family: JetbrainsMono Nerd Font, monospace;
+  font-size: 12px;
+  background-color: @primary_container;
+  color: @on_primary_container;
+  border-radius: 25px;
+  padding: 0 10px;
+  margin-right: 4px;
+  min-height: 0;
+}
+
+#mpris {
+  font-family: JetbrainsMono Nerd Font, monospace;
+  font-size: 14px;
+  background-color: @primary_container;
+  color: @on_primary_container;
+  border-radius: 25px;
+  padding: 0 10px;
+  margin-right: 4px;
+  min-height: 0;
+}
+
+#mpris.spotify {
+  background-color: #1DB954;
+  color: black;
+}
+
+#wireplumber {
+  font-family: JetbrainsMono Nerd Font, monospace;
+  font-size: 12px;
+  background-color: @primary_container;
+  color: @on_primary_container;
+  border-radius: 25px;
+  padding: 0 10px;
+  margin-right: 4px;
+  min-height: 0;
+}
+
+#custom-notif {
+  font-family: JetbrainsMono Nerd Font;
+  font-size: 14px;
+  background-color: @primary_container;
+  color: @on_primary_container;
+  border-radius: 25px;
+  padding: 0 11px 0 10px;
+  margin-right: 4px;
+  min-height: 0;
+}
+

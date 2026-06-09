@@ -1,0 +1,181 @@
+exec "dbus-update-activation-environment --systemd --all "
+
+exec "dbus-update-activation-environment --systemd XDG_CURRENT_DESKTOP=sway "
+
+exec systemctl --user start hyprpolkitagent
+exec swaync
+exec awww-daemon
+
+output "VGA-1" {
+    mode 1600x900@60Hz
+    scale 1
+    transform normal
+    pos 0 0
+}
+
+input * {
+    xkb_layout "us"
+    xkb_options "caps:escape_shifted_capslock"
+    repeat_delay 200
+    repeat_rate 40
+    pointer_accel 0.0
+    accel_profile "flat"
+    scroll_method on_button_down
+    scroll_button button2
+}
+
+gaps inner 4
+gaps outer 0
+smart_gaps off
+default_border pixel 2
+default_floating_border pixel 2
+smart_borders on
+
+# class                 border  backgr. text    indicator child_border
+client.focused          #161616 #161616 #B3B3B3 #161616    #D08770
+client.focused_inactive #161616 #4D4D4D #B3B3B3 #505050    #505050
+client.unfocused        #505050 #4D4D4D #B3B3B3 #505050    #505050
+client.urgent           #cc4444 #cc4444 #ffffff #cc4444    #cc4444
+
+default_orientation horizontal
+
+# --- Variables ---
+set $mod Mod4
+set $term alacritty
+
+# --- Keybindings ---
+#
+floating_modifier $mod normal
+
+
+# System & Launchers
+bindsym $mod+T exec $env_setup && $term
+bindsym $mod+D exec rofi -show drun
+bindsym $mod+Shift+W exec ~/.config/niri/scripts/wallset.sh
+bindsym $mod+P exec ~/script/sober_macro.sh
+bindsym $mod+Shift+E exec swaynag -t warning -m 'Exit Sway?' -B 'Yes' 'swaymsg exit'
+
+# Window Management
+bindsym $mod+Q kill
+bindsym $mod+F fullscreen toggle
+bindsym $mod+Shift+F fullscreen toggle global
+bindsym $mod+X floating toggle
+bindsym $mod+Space focus mode_toggle
+bindsym $mod+W layout toggle tabbed split
+
+# Directional Window Focus (Vim Style)
+bindsym $mod+H focus left
+bindsym $mod+J focus down
+bindsym $mod+K focus up
+bindsym $mod+L focus right
+
+# Moving Windows Inline
+bindsym $mod+Ctrl+H move left
+bindsym $mod+Ctrl+J move down
+bindsym $mod+Ctrl+K move up
+bindsym $mod+Ctrl+L move right
+
+bindsym Mod1+Tab workspace number 2
+
+# =========================================================================
+# WORKSPACE MANAGEMENT (U & I Strategy)
+# =========================================================================
+
+# Navigation: Focus Previous/Next active workspace
+bindsym $mod+U exec swaymsg workspace $(($(swaymsg -t get_workspaces | jq '.[] | select(.focused).num') + 1))
+bindsym $mod+I exec swaymsg workspace $(($(swaymsg -t get_workspaces | jq '.[] | select(.focused).num') - 1))
+
+# Action: Move focused application window container to Previous/Next workspace
+bindsym $mod+Ctrl+U exec swaymsg move container to workspace $(($(swaymsg -t get_workspaces | jq '.[] | select(.focused).num') + 1)); exec swaymsg workspace $(($(swaymsg -t get_workspaces | jq '.[] | select(.focused).num') + 1))
+bindsym $mod+Ctrl+I exec swaymsg move container to workspace $(($(swaymsg -t get_workspaces | jq '.[] | select(.focused).num') - 1)); exec swaymsg workspace $(($(swaymsg -t get_workspaces | jq '.[] | select(.focused).num') - 1))
+
+# Action: Seamlessly shift your structural workspace assignments left/right
+bindsym $mod+Shift+U move workspace to right
+bindsym $mod+Shift+I move workspace to left
+
+# Fallback Numeric Workspaces (Kept alive just in case)
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+
+# --- Manual Sizing (Adjusting widths/heights) ---
+bindsym $mod+Minus resize shrink width 10 px or 10 ppt
+bindsym $mod+Equal resize grow width 10 px or 10 ppt
+bindsym $mod+Shift+Minus resize shrink height 10 px or 10 ppt
+bindsym $mod+Shift+Equal resize grow height 10 px or 10 ppt
+
+# --- Hardware Media Control Keys ---
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ -l 1.0
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindsym --locked XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+bindsym XF86MonBrightnessUp exec brightnessctl -d "ddcci*" set 5%+
+bindsym XF86MonBrightnessDown exec brightnessctl -d "ddcci*" set 5%-
+
+# --- Screenshots ---
+bindsym Ctrl+Print exec grimshot copy output
+# bindsym Print exec grimshot copy area
+bindsym Print exec wayfreeze --after-freeze-cmd 'grim -g "$(slurp)" - | wl-copy; killall wayfreeze'
+bindsym $mod+shift+V exec grimshot copy area
+bindsym Alt+Print exec grimshot copy active
+
+bindsym $mod+Shift+c reload
+bindsym $mod+b splith
+bindsym $mod+v splitv
+
+
+# Floating Rules matching your layout expectations
+for_window [title="^Picture-in-Picture$"] floating enable
+for_window [app_id="mpv"] floating enable
+for_window [app_id="zoom"] floating enable
+for_window [app_id="org.pulseaudio.pavucontrol"] floating enable
+for_window [app_id="^steam$"] floating enable
+for_window [app_id="^xdg-desktop-portal$"] floating enable
+for_window [app_id="volume-control"] floating enable
+
+# --- Intel HD Graphics 4400 Performance Optimization Tweaks ---
+# Bypasses the Sway compositor pipeline cleanly on fullscreen tasks/games
+for_window [shell=".*"] inhibit_idle focus
+
+# bar {
+#     font pango:Hack Nerd Font 10
+#     position bottom
+#     height 0
+
+#     status_command exec bash /home/lstres/.config/sway/status_command.sh
+
+#     # When the status_command prints a new line to stdout, swaybar updates.
+#     # The default just shows the current date and time.
+#     # status_command while date +'%Y-%m-%d %X'; do sleep 1; done
+#     colors {
+#         statusline #ffffff
+#         background #323232
+#         inactive_workspace #32323200 #32323200 #5c5c5c
+#     }
+# }
+
+
+bar {
+    swaybar_command waybar
+}
